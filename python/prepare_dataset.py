@@ -5,9 +5,11 @@
 # data_dict 에서 MIMII 데이터셋은 db(decibel), normal||abnormal 으로 분류
 # label_dict 는 data_dict 의 value 값에 해당하는 데이터셋의 label을 저장
 # 데이터셋은 id 로 구분해서 관리하지 않았음
+# 추가적인 데이터셋은 또 구현하면 됨
 
 # DCASE dir 형식 : "data/DCASE/{year}/{dev_eval_additional}/{train_or_test}/{data_class_and_file_name}"
 # MIMII dir 형식 : "data/MIMII/data_{db}/{machine_type}/id_{id}/{data_class}/{file_name}"
+# 추가 데이터셋 dir 형식 : 
 
 import os
 
@@ -58,29 +60,32 @@ mimii_ids = [
 machine_types = [ "fan", "valve" ]  # 분류할 기계의 종류
 data_class = [ "normal", "abnormal", "unknown"]  # 분류할 데이터의 종류
 
-def initialize_base_dir(func):
-    def wrapper(*args, **kwargs):
-        if 'base_dir' not in kwargs or kwargs['base_dir'] is None:
+# base_dir를 초기화하는 데코레이터
+def initialize_base_dir(func) :
+    def wrapper(*args, **kwargs) :
+        if 'base_dir' not in kwargs or kwargs['base_dir'] is None :
             # base_dir을 새로 계산하거나 업데이트하는 로직
             base_dir = get_base_dir()
             kwargs['base_dir'] = base_dir
         return func(*args, **kwargs)
     return wrapper
 
-def get_base_dir():
+# base_dir를 초기화하는 함수
+def get_base_dir() :
     current_dir = os.path.abspath(__file__)
-    while True:
+    while True :
         parent_dir = os.path.dirname(current_dir)
-        if os.path.exists(os.path.join(parent_dir, 'data')):
+        if os.path.exists(os.path.join(parent_dir, 'data')) :
             print("base_dir is initialized to", os.path.join(parent_dir, 'data'))
             return os.path.join(parent_dir, 'data/')
-        if current_dir == parent_dir:
+        if current_dir == parent_dir :
             break
         current_dir = parent_dir
     return None
 
+
 @initialize_base_dir
-def get_data_paths_and_labels_from_machine(machine, base_dir = base_dir) : 
+def get_data_paths_and_labels_from_machine(machine, base_dir = base_dir) :
     '''
     data_path를 조합 -> dcase 혹은 mimii 데이터셋의 디렉토리 경로와 label을 추출
 
@@ -123,6 +128,8 @@ def get_data_paths_and_labels_from_machine(machine, base_dir = base_dir) :
         label_dict[data_case[1]][decibel] = dict()
 
         data_dict[data_case[1]][decibel], label_dict[data_case[1]][decibel] = get_from_mimii(machine, decibel, base_dir = base_dir)
+
+    # TODO : Another additional data
 
     return data_dict, label_dict
 
@@ -205,6 +212,11 @@ def get_from_mimii(machine, decibel, base_dir) :
 
     return data_dict, label_dict
         
+
+# TODO : other dataset
+def get_data_from_other_dataset(data_path) :
+    pass
+
 
 def get_data_paths_and_labels_from_edge_dir(data_path) :
     '''
