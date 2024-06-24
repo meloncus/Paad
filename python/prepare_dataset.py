@@ -91,7 +91,7 @@ def get_data_paths_and_labels_from_machine(machine, base_dir = base_dir) :
 
     ex)
     data_dict[”DCASE”][”2020”][”dev”]["train"][”normal”] = {real_path},
-    data_dict[”MIMII”][”data_-6_db”]["id_00][”normal”] = {real_path}
+    data_dict[”MIMII”][”data_-6_db”][”normal”] = {real_path}
 
     inputs
     machine : string, 분류할 기계의 종류
@@ -208,7 +208,9 @@ def get_from_mimii(machine, decibel, base_dir) :
             tmp_data_path = data_path + each_id + "/" # data/MIMII/data_-6_dB/fan/id_00/
             tmp_data_path = tmp_data_path + each_data_class + "/" # tmp_data_path : "data/MIMII/data_-6_dB/fan/id_00/normal/"
 
-            data_dict, label_dict = get_data_paths_and_labels_from_edge_dir(tmp_data_path)
+            tmp_data_dict, label_dict = get_data_paths_and_labels_from_edge_dir(tmp_data_path)
+
+            data_dict[each_data_class] = tmp_data_dict[each_data_class] # data_dict["normal"] = {real_path} 이 부분이 없으면 abnormal 데이터만 저장됨
 
     return data_dict, label_dict
         
@@ -254,7 +256,7 @@ def get_data_paths_and_labels_from_edge_dir(data_path) :
         else : 
             data_dict[data_class[2]].append(each_data_full_path)
             label_dict[each_data_full_path] = 0
-
+        
     print(data_path.split('/')[data_path.split('/').index("data"):-1])
     
     return data_dict, label_dict
