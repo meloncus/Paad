@@ -173,7 +173,7 @@ def get_from_dcase(machine, year, base_dir) :
             if dataset_class == dcase_dev_eval_additional[2] and each_data_class == train_or_test[1] :
                 continue
             
-            data_dict[dataset_class][each_data_class] = dict()
+            data_dict[dataset_class][each_data_class] = list()
             label_dict[dataset_class][each_data_class] = dict()
 
             data_dict[dataset_class][each_data_class], label_dict[dataset_class][each_data_class] = get_data_paths_and_labels_from_edge_dir(tmp_data_path)
@@ -200,6 +200,10 @@ def get_from_mimii(machine, decibel, base_dir) :
     data_dict = dict()
     label_dict = dict()
 
+    for each_data_class in data_class :
+        data_dict[each_data_class] = list()
+
+
     data_path = base_dir + "MIMII/" + decibel + "/" + machine + '/' # data/MIMII/data_-6_dB/fan/
     for each_id in mimii_ids :
         for each_data_class in data_class :
@@ -208,9 +212,10 @@ def get_from_mimii(machine, decibel, base_dir) :
             tmp_data_path = data_path + each_id + "/" # data/MIMII/data_-6_dB/fan/id_00/
             tmp_data_path = tmp_data_path + each_data_class + "/" # tmp_data_path : "data/MIMII/data_-6_dB/fan/id_00/normal/"
 
-            tmp_data_dict, label_dict = get_data_paths_and_labels_from_edge_dir(tmp_data_path)
+            tmp_data_list, tmp_label_dict = get_data_paths_and_labels_from_edge_dir(tmp_data_path)
 
-            data_dict[each_data_class] = tmp_data_dict[each_data_class] # data_dict["normal"] = {real_path} 이 부분이 없으면 abnormal 데이터만 저장됨
+            data_dict[each_data_class].extend(tmp_data_list)
+            label_dict.update(tmp_label_dict)
 
     return data_dict, label_dict
         
@@ -226,40 +231,39 @@ def get_data_paths_and_labels_from_edge_dir(data_path) :
     label_dict 가 의미 없는 값일 수 있으나, label 값을 binary 로 mapping 하기 위해 사용
     경로 상에서 의미있는 값은 출력하게 해놨음
 
-    ex) data_dict["normal"] = {real_path}
+    ex) data_list["normal"] = {real_path}
 
     inputs
     data_path : string, *.wav 파일이 저장된 디렉토리 경로
 
     outputs
-    data_dict : dictionary, { key : normal or abnormal, value : 디렉토리에 있는 모든 *.wav 파일의 경로를 저장한 리스트 }
+    data_list : list, 디렉토리에 있는 모든 *.wav 파일의 경로를 저장한 리스트
     label_dict : dictionary, { key : 디렉토리에 있는 모든 *.wav 파일의 경로, value : label }
     '''
     
-    data_dict = dict()
+    data_list = list()
     label_dict = dict()
 
-    for each_class in data_class :
-        data_dict[each_class] = []
 
     data_path_list = os.listdir(data_path) # data_path에 있는 모든 파일 리스트
     for each_data in data_path_list :
         each_data_full_path = data_path + each_data # data_path에 있는 각 파일의 전체 경로
         dirname = data_path.split("/")[-2] # data_path의 마지막 디렉토리 이름
 
+        data_list.append(each_data_full_path)
         if data_class[0] in each_data or dirname == data_class[0] :
-            data_dict[data_class[0]].append(each_data_full_path)
+            # data_dict[data_class[0]].append(each_data_full_path)
             label_dict[each_data_full_path] = 1
         elif data_class[1] in each_data or "anomal" in each_data or dirname == data_class[1] :
-            data_dict[data_class[1]].append(each_data_full_path)
+            # data_dict[data_class[1]].append(each_data_full_path)
             label_dict[each_data_full_path] = -1
         else : 
-            data_dict[data_class[2]].append(each_data_full_path)
+            # data_dict[data_class[2]].append(each_data_full_path)
             label_dict[each_data_full_path] = 0
         
     print(data_path.split('/')[data_path.split('/').index("data"):-1])
     
-    return data_dict, label_dict
+    return data_list, label_dict
 
 
 if __name__ == "__main__" :
