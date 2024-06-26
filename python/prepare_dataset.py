@@ -14,7 +14,7 @@
 import os
 from utils import initialize_base_dir
 
-base_dir = None # 데이터셋이 저장된 디렉토리 경로
+
 data_case = [ "DCASE", "MIMII" ] # 분류할 데이터셋의 종류
 
 # DCASE start
@@ -63,7 +63,7 @@ data_class = [ "normal", "abnormal", "unknown"]  # 분류할 데이터의 종류
 
 
 @initialize_base_dir
-def get_data_paths_and_labels_from_machine(machine, base_dir = base_dir) :
+def get_data_paths_and_labels_from_machine(machine, base_dir) :
     '''
     data_path를 조합 -> dcase 혹은 mimii 데이터셋의 디렉토리 경로와 label을 추출
 

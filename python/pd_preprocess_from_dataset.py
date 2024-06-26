@@ -6,8 +6,6 @@ import pandas as pd
 import numpy as np
 
 
-PICKLE_PATH = "working/pkl/"
-
 data_types = ["fan", "pump", "slider", "valve"]
 
 specific_case = "MIMII" # or DCASE
