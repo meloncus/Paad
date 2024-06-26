@@ -20,6 +20,16 @@ specific_db = "data_-6_db" # MIMII
 
 
 def get_specific_data (data_dict) :
+    '''
+    get specific data from data_dict such as MIMII[case][db] or DCASE[case][year][dev_eval_additional][train_or_test]
+
+    input
+    data_dict : dictionary, data_dict from get_data_paths_and_labels_from_machine
+
+    output
+    data : dictionary, specific data from data_dict
+    '''
+
     if specific_case == "MIMII" :
         data = data_dict[specific_case][specific_db]
 
@@ -34,6 +44,16 @@ def get_specific_data (data_dict) :
 
 
 def get_flatten_data (data_dict) :
+    '''
+    get list of path from data_dict
+
+    input 
+    data_dict : dictionary, specific data from get_specific_data
+
+    output
+    data : list, flatten data from data_dict
+    '''
+
     data = list()
 
     for key in data_dict.keys() :
@@ -43,10 +63,32 @@ def get_flatten_data (data_dict) :
 
 
 def get_label_from_flatten_specifics (flatten_data_list, specific_label_dict) :
+    '''
+    get label from list of path
+
+    input
+    flatten_data_list : list, list of path
+    specific_label_dict : dictionary, label_dict from get_specific_data, { key : path, value : label(1 or -1) }
+
+    output 
+    label_data : list, list of label(1 or -1)
+    '''
+
     return [ specific_label_dict[raw_path] for raw_path in flatten_data_list ]
 
 
 def get_dataframe_from_flatten_data_and_label (flatten_data, label_data) :
+    '''
+    get dataframe from flatten_data and label_data
+
+    input
+    flatten_data : list, list of path
+    label_data : list, list of label(1 or -1)
+
+    output
+    df : pandas.DataFrame, dataframe from flatten_data and label_data, { "filename" : flatten_data, "label" : label_data, "type" : type of data(such as "fan")}
+        if data is from MIMII, add "model" columns { "model" : id of data(such as "1")}
+    '''
     df = pd.DataFrame({"filename" : flatten_data, "label" : label_data})
 
     sample_df = df.iloc[0]
