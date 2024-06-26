@@ -1,4 +1,5 @@
 import os
+import datetime
 import pandas as pd
 
 BASE_DIR_NAME = "data"
@@ -22,7 +23,7 @@ def get_base_dir() :
     while True :
         parent_dir = os.path.dirname(current_dir)
         if os.path.exists(os.path.join(parent_dir, BASE_DIR_NAME)) :
-            print("base_dir is initialized to", os.path.join(parent_dir, BASE_DIR_NAME))
+            print("base_dir is ", os.path.join(parent_dir, BASE_DIR_NAME))
             return os.path.join(parent_dir, BASE_DIR_NAME + '/')
         if current_dir == parent_dir :
             break
@@ -54,9 +55,37 @@ def get_dir_path_default_dataframe (df) :
     return dir_info
 
 
-def make_dir_from_path (dir_path) :
+def get_abs_dir_path (dir_path) :
+    return os.path.join(get_base_dir(), PICKLE_PATH, dir_path)
 
-    abs_path = get_base_dir()
-    abs_path = os.path.join(abs_path, PICKLE_PATH, dir_path)
-    
-    os.makedirs(abs_path, exist_ok=True)
+
+def make_dir_from_abs_path (dir_path) :
+    print("Be careful with the path, This can make all directories in the path.")
+    print("Path : ", dir_path)
+    print("Are you sure you want to make directories in the path? (y/n)")
+
+    while(True) :
+        answer = input()
+        if answer == 'y' :
+            break
+        elif answer == 'n' :
+            return
+        else :
+            print("Please type 'y' or 'n'.")
+
+    os.makedirs(dir_path, exist_ok=True)
+
+
+def save_dataframe (df, abs_path, filename) :
+    if os.path.exists(abs_path) :
+        current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        data_path = os.path.join(abs_path, current_time + '_' + filename + ".pkl")
+
+        try :
+            df.to_pickle(data_path)
+            print("Dataframe is saved in ", data_path)
+            return data_path
+        except Exception as e :
+            print("Error occured while saving dataframe.")
+            print(e)
+            return None

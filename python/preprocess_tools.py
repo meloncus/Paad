@@ -1,6 +1,11 @@
 # TODO : import load_audio, librosa
 # TODO : make parameter global
 
+import librosa
+
+from utils import load_audio
+
+
 def file_to_vector_mel(file_name,
                          n_mels=64,
                          frames=2,
