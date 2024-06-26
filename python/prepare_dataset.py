@@ -12,6 +12,7 @@
 # 추가 데이터셋 dir 형식 : 
 
 import os
+from utils import initialize_base_dir
 
 base_dir = None # 데이터셋이 저장된 디렉토리 경로
 data_case = [ "DCASE", "MIMII" ] # 분류할 데이터셋의 종류
@@ -59,29 +60,6 @@ mimii_ids = [
 
 machine_types = [ "fan", "valve" ]  # 분류할 기계의 종류
 data_class = [ "normal", "abnormal", "unknown"]  # 분류할 데이터의 종류
-
-# base_dir를 초기화하는 데코레이터
-def initialize_base_dir(func) :
-    def wrapper(*args, **kwargs) :
-        if 'base_dir' not in kwargs or kwargs['base_dir'] is None :
-            # base_dir을 새로 계산하거나 업데이트하는 로직
-            base_dir = get_base_dir()
-            kwargs['base_dir'] = base_dir
-        return func(*args, **kwargs)
-    return wrapper
-
-# base_dir를 초기화하는 함수
-def get_base_dir() :
-    current_dir = os.path.abspath(__file__)
-    while True :
-        parent_dir = os.path.dirname(current_dir)
-        if os.path.exists(os.path.join(parent_dir, 'data')) :
-            print("base_dir is initialized to", os.path.join(parent_dir, 'data'))
-            return os.path.join(parent_dir, 'data/')
-        if current_dir == parent_dir :
-            break
-        current_dir = parent_dir
-    return None
 
 
 @initialize_base_dir

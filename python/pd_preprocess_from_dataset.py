@@ -1,7 +1,12 @@
 # dataset 에서 불러온 데이터를 전처리하기 위한 파일
+# TODO : save, load data from pickle from dataframes
+# TODO : get preprocessed data from preprocess_tools.py
 
 import pandas as pd
 import numpy as np
+
+
+PICKLE_PATH = "working/pkl/"
 
 data_types = ["fan", "pump", "slider", "valve"]
 
@@ -14,6 +19,7 @@ specific_dev_eval_additional = None # DCASE
 specific_train_or_test = None # DCASE
 
 specific_db = "data_-6_db" # MIMII
+
 
 def get_specific_data (data_dict) :
     if specific_case == "MIMII" :
@@ -28,6 +34,7 @@ def get_specific_data (data_dict) :
     
     return data
 
+
 def get_flatten_data (data_dict) :
     data = list()
 
@@ -36,8 +43,10 @@ def get_flatten_data (data_dict) :
 
     return data
 
+
 def get_label_from_flatten_specifics (flatten_data_list, specific_label_dict) :
     return [ specific_label_dict[raw_path] for raw_path in flatten_data_list ]
+
 
 def get_dataframe_from_flatten_data_and_label (flatten_data, label_data) :
     df = pd.DataFrame({"filename" : flatten_data, "label" : label_data})
