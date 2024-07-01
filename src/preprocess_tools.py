@@ -3,7 +3,7 @@
 
 import librosa
 
-from utils import load_audio
+from src.utils.utils import load_audio
 
 
 def file_to_vector_mel(file_name,
