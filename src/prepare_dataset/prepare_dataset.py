@@ -12,7 +12,7 @@
 # 추가 데이터셋 dir 형식 : 
 
 import os
-from utils import initialize_base_dir
+from utils.utils_general import initialize_base_dir
 
 
 data_case = [ "DCASE", "MIMII" ] # 분류할 데이터셋의 종류
