@@ -2,6 +2,11 @@
 # TODO : make parameter global
 
 import librosa
+import sys
+import os
+
+SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(SRC_DIR)
 
 from utils.utils_general import load_audio
 

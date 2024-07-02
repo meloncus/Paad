@@ -12,6 +12,11 @@
 # 추가 데이터셋 dir 형식 : 
 
 import os
+import sys
+
+SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(SRC_DIR)
+
 from utils.utils_general import initialize_base_dir
 
 
@@ -245,6 +250,7 @@ def get_data_paths_and_labels_from_edge_dir(data_path) :
 
 
 if __name__ == "__main__" :
+    print("SRC dir : ", SRC_DIR)
     data_dict, label_dict = get_data_paths_and_labels_from_machine("fan")
     
     # print(data_dict)
