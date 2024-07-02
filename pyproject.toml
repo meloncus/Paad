@@ -1,1 +1,26 @@
-[project]
+[tool.poetry]
+name = "paad"
+version = "0.1.0"
+description = "Paad (Power plant acoustic anomaly detection)"
+authors = ["silofox <silofox@uisn.co.kr>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.12"
+numpy = "1.23.1"
+librosa = "0.10.1"
+pandas = "1.4.0"
+ipython = "8.24.0"
+matplotlib = "3.6.2"
+seaborn = "0.13.2"
+scikit-learn = "1.1.1"
+
+tensorflow = { version = "2.9.2", extras = ["gpu"] }
+torch = { version = "1.11.0", extras = ["cu12.3"] }
+
+jupyter = "1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
