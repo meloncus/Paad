@@ -62,6 +62,20 @@ def get_flatten_data (data_dict) :
     return data
 
 
+def get_dropped_data_through_specific_id_from_flatten_data (flatten_data_list, specific_id = 0) :
+    '''
+    get list of path from flatten_data_list that contains specific_id
+
+    input
+    flatten_data_list : list, list of path
+    specific_id : int, specific id
+
+    output
+    data : list, list of path that contains specific_id
+    '''
+    return [each_path for each_path in flatten_data_list if f"id_{specific_id:02d}" in each_path]
+
+
 def get_label_from_flatten_specifics (flatten_data_list, specific_label_dict) :
     '''
     get label from list of path

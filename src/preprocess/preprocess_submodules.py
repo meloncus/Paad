@@ -1,6 +1,8 @@
 # TODO : import load_audio, librosa
 # TODO : make parameter global
+# TODO : seperate submodules
 
+import numpy as np
 import librosa
 import sys
 import os
@@ -8,7 +10,7 @@ import os
 SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(SRC_DIR)
 
-from utils.utils_general import load_audio
+from utils.utils_preprocess import load_audio
 
 
 def file_to_vector_mel(file_name,

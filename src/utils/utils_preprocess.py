@@ -1,3 +1,5 @@
+# TODO : load_audio 말고 여러가지 가져오면 되는데 이름은 모듈 이름은 바꿔야 함
+
 import torchaudio
 import torch
 
