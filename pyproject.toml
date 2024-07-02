@@ -16,8 +16,10 @@ matplotlib = "3.6.2"
 seaborn = "0.13.2"
 scikit-learn = "1.1.1"
 
-tensorflow = { version = "2.9.2", extras = ["gpu"] }
-torch = { version = "1.11.0", extras = ["cu12.3"] }
+tensorflow = { version = "2.9.2", extras = ["gpu", "cu12.2"] }
+torch = { version = "1.11.0", extras = ["gpu", "cu12.2"] }
+torchaudio = "0.11.0"
+torchvision = "0.12.0"
 
 jupyter = "1.0.0"
 
