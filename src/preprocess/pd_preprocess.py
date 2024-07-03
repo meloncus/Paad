@@ -4,6 +4,13 @@
 
 import pandas as pd
 import numpy as np
+import sys
+import os
+
+SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(SRC_DIR)
+
+from preprocess.preprocess_submodules import file_to_vector_mel, file_to_vector_chroma
 
 
 data_types = ["fan", "pump", "slider", "valve"]
@@ -116,4 +123,32 @@ def get_dataframe_from_flatten_data_and_label (flatten_data, label_data) :
                 df["model"] = df["filename"].apply(lambda full_id : full_id.split("/")[id_idx][4])
                 break
 
+    return df
+
+
+def put_mel_from_dataframe (df) :
+    '''
+    put mel spectrogram to dataframe
+
+    input
+    df : pandas.DataFrame, dataframe from get_dataframe_from_flatten_data_and_label
+
+    output
+    df : pandas.DataFrame, dataframe with "mel" column
+    '''
+    df["mel"] = df["filename"].apply(file_to_vector_mel)
+    return df
+
+
+def put_chroma_from_dataframe (df) :
+    '''
+    put chroma to dataframe
+
+    input
+    df : pandas.DataFrame, dataframe from get_dataframe_from_flatten_data_and_label
+
+    output
+    df : pandas.DataFrame, dataframe with "chroma" column
+    '''
+    df["chroma"] = df["filename"].apply(file_to_vector_chroma)
     return df
