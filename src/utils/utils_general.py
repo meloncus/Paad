@@ -1,9 +1,18 @@
 import os
 import datetime
 import pandas as pd
+import tensorflow as tf
 
 BASE_DIR_NAME = "data"
 PICKLE_PATH = "working/pkl/"
+
+import sys
+
+SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(SRC_DIR)
+
+from utils.submodule.vector_to_numpy_array import vector_to_numpy_array
+from preprocess.submodule.normalize import min_max_normalization
 
 
 # base_dir를 초기화하는 데코레이터
@@ -89,3 +98,42 @@ def save_dataframe (df, abs_path, filename) :
             print("Error occured while saving dataframe.")
             print(e)
             return None
+
+
+def get_matrixes (df, feat = "mel") :
+    '''
+    get matrixes from dataframe
+
+    input
+    df : pandas.DataFrame, dataframe
+    feat : string, feature name
+
+    output
+    train_data : numpy.array, training data
+    validate_data : numpy.array, validation data
+    normal_data : numpy.array, normal data
+    abnormal_data : numpy.array, abnormal data
+    '''
+    # vector_to_numpy_array : list of vector to numpy array
+    train_data = vector_to_numpy_array(df[(df["train"] == 1)][feat].tolist())
+    validate_data = vector_to_numpy_array(df[(df["test"] == 1)][feat].tolist())
+    normal_data = vector_to_numpy_array(df[(df["test"] == 1) & (df["label"] == 1)][feat].tolist())
+    abnormal_data = vector_to_numpy_array(df[(df["test"] == 1) & (df["label"] == -1)][feat].tolist())
+
+
+    # normalization
+    min_value = tf.reduce_min(train_data)
+    max_value = tf.reduce_max(train_data)
+
+    train_data = min_max_normalization(train_data, min_value, max_value)
+    validate_data = min_max_normalization(validate_data, min_value, max_value)
+    normal_data = min_max_normalization(normal_data, min_value, max_value)
+    abnormal_data = min_max_normalization(abnormal_data, min_value, max_value)
+
+    # cast to float32
+    train_data = tf.cast(train_data, tf.float32)
+    validate_data = tf.cast(validate_data, tf.float32)
+    normal_data = tf.cast(normal_data, tf.float32)
+    abnormal_data = tf.cast(abnormal_data, tf.float32)
+
+    return train_data, validate_data, normal_data, abnormal_data
