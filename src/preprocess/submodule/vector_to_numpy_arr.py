@@ -1,5 +1,5 @@
 import numpy as np
-import tqdm
+from tqdm import tqdm
 
 def vector_to_numpy_arr (vector_arr) :
     '''
