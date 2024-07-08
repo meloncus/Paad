@@ -2,7 +2,7 @@ import tensorflow as tf
 import os
 import sys
 
-SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))
 sys.path.append(SRC_DIR)
 
 from train_and_eval.submodule.metric import get_mse
@@ -28,3 +28,6 @@ def predict_only_autoencoder(model, data, threshold = 0.5) :
     predictions = tf.where(boolean_tensor, 1, -1)
 
     return predictions
+
+if __name__ == "__main__" :
+    print(SRC_DIR)
