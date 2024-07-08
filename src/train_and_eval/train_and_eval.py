@@ -9,7 +9,18 @@ from train_and_eval.submodule.metric import get_mse, calculate_stats
 from train_and_eval.submodule.predict import predict_only_autoencoder
 from model.autoencoder import AutoEncoder
 
-def train_and_eval_for_autoencoder(train_set, val_set, y_val, input_dim, device = '', feat = '', epochs = 50) :
+def train_and_eval_for_autoencoder(
+        train_set, 
+        val_set, 
+        y_val, 
+        input_dim, 
+        device = '', 
+        feat = '', 
+        epochs = 50, 
+        batch_size = 56,
+        save_mode = False, 
+        save_path = None,
+        ) :
     '''
     train autoencoder and evaluate it
 
@@ -30,12 +41,12 @@ def train_and_eval_for_autoencoder(train_set, val_set, y_val, input_dim, device 
     autoencoder = AutoEncoder(input_dim)
     autoencoder.compile(optimizer = 'adam', loss = 'mean_squared_error')
 
-    history  = autoencoder.fir(
+    history  = autoencoder.fit(
         train_set,
         val_set,
         epochs = epochs,
         shuffle = True,
-        batch_size = 56,
+        batch_size = batch_size,
         validation_split = 0.1
     )
 
@@ -46,7 +57,7 @@ def train_and_eval_for_autoencoder(train_set, val_set, y_val, input_dim, device 
     train_loss = get_mse(train_set, reconstructions)
 
     cut_off = np.mean(train_loss) + np.std(train_loss)
-    print("Cutoff : {}\n".format(cut_off.numpy()), end = '')
+    print("Cutoff : {}\n".format(cut_off), end = '')
     print("Prop. of Training data over Threshold : {}\n".format(np.sum(train_loss > cut_off) / len(train_loss)))
 
     predictions = predict_only_autoencoder(autoencoder, val_set, cut_off)
@@ -54,8 +65,8 @@ def train_and_eval_for_autoencoder(train_set, val_set, y_val, input_dim, device 
     df = calculate_stats(predictions, y_val, "Machine", feat, "AE")
 
     # save model
-    # model_dir = ""
-    # autoencoder.save_weights(model_dir)
-    # print("Model saved at {}".format(model_dir))
+    if save_mode :
+        autoencoder.save_weights(save_path)
+        print("Model saved at {}".format(save_path))
     
     return autoencoder, df

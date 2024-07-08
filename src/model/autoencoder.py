@@ -1,6 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras import layers, Model
-
+from tensorflow.keras import layers, Model # type: ignore
 
 class AutoEncoder (Model):
     def __init__(self, shape):
