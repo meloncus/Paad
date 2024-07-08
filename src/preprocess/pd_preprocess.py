@@ -10,7 +10,7 @@ import os
 SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(SRC_DIR)
 
-from preprocess.preprocess_submodules import file_to_vector_mel, file_to_vector_chroma
+from preprocess.submodule.file_to_vector import file_to_vector_mel, file_to_vector_chroma
 
 
 data_types = ["fan", "pump", "slider", "valve"]

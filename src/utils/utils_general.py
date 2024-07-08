@@ -11,7 +11,7 @@ import sys
 SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(SRC_DIR)
 
-from utils.submodule.vector_to_numpy_array import vector_to_numpy_array
+from preprocess.submodule.vector_to_numpy_arr import vector_to_numpy_arr
 from preprocess.submodule.normalize import min_max_normalization
 
 

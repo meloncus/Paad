@@ -1,4 +1,3 @@
-
 def min_max_normalization (target, max_value, min_value) :
     '''
     normalize target using max_value and min_value
