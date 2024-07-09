@@ -7,7 +7,7 @@ sys.path.append(SRC_DIR)
 
 from train_and_eval.submodule.metric import get_mse, calculate_stats
 from train_and_eval.submodule.predict import predict_only_autoencoder
-from model.autoencoder import AutoEncoder
+from models.submodule.autoencoder import AutoEncoder
 
 def train_and_eval_for_autoencoder(
         train_set, 
@@ -66,7 +66,7 @@ def train_and_eval_for_autoencoder(
 
     # save model
     if save_mode :
-        autoencoder.save_weights(save_path)
+        autoencoder.save_weights("tmp/autoencoder_weights.h5")
         print("Model saved at {}".format(save_path))
     
     return autoencoder, df

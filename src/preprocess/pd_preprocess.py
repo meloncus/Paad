@@ -4,6 +4,7 @@
 
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 import sys
 import os
 
@@ -136,7 +137,12 @@ def put_mel_from_dataframe (df) :
     output
     df : pandas.DataFrame, dataframe with "mel" column
     '''
-    df["mel"] = df["filename"].apply(file_to_vector_mel)
+    mels = []
+    for filename in tqdm(df["filename"], desc = "Processing mel ") :
+        mel = file_to_vector_mel(filename)
+        mels.append(mel)
+    df["mel"] = mels
+
     return df
 
 
@@ -150,5 +156,10 @@ def put_chroma_from_dataframe (df) :
     output
     df : pandas.DataFrame, dataframe with "chroma" column
     '''
-    df["chroma"] = df["filename"].apply(file_to_vector_chroma)
+    chromas = []
+    for filename in tqdm(df["filename"], desc = "Processing chroma ") :
+        chroma = file_to_vector_chroma(filename)
+        chromas.append(chroma)
+    df["chroma"] = chromas
+
     return df

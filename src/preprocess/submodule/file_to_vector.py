@@ -44,7 +44,7 @@ def file_to_vector_mel(file_name,
     log_mel_spectrogram = 20.0 / power * np.log10(mel_spectrogram + sys.float_info.epsilon)
 
     # 04 calculate total vector size
-    vectorarray_size = len(log_mel_spectrogram[0, :]) - frames + 1
+    # vectorarray_size = len(log_mel_spectrogram[0, :]) - frames + 1
 
 
     # # 06 generate feature vectors by concatenating multi_frames

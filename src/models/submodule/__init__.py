@@ -1,4 +1,4 @@
-# paad/src/model/__init__.py
+# paad/src/model/submodule/__init__.py
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.decomposition import PCA
