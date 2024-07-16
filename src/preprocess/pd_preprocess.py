@@ -51,6 +51,29 @@ def get_specific_data (data_dict) :
     return data
 
 
+def default_preprocess (data_dict, label_dict) :
+    '''
+    default preprocess for data_dict and label_dict
+
+    input
+    data_dict : dictionary, specific data from get_specific_data
+    label_dict : dictionary, label_dict from get_specific_data, { key : path, value : label(1 or -1) }
+
+    output
+    df : pandas.DataFrame, dataframe from data_dict and label_dict, { "filename" : flatten_data, "label" : label_data, "type" : type of data(such as "fan")}
+        if data is from MIMII, add "model" columns { "model" : id of data(such as "1")}
+    '''
+
+    flatten_data = get_flatten_data(data_dict)
+
+    label_data = get_label_from_flatten_specifics(flatten_data, label_dict)
+
+    df = get_dataframe_from_flatten_data_and_label(flatten_data, label_data)
+    # df = put_mel_from_dataframe(df)
+
+    return df
+
+
 def get_flatten_data (data_dict) :
     '''
     get list of path from data_dict
@@ -138,6 +161,7 @@ def put_mel_from_dataframe (df) :
     df : pandas.DataFrame, dataframe with "mel" column
     '''
     mels = []
+    print("Mel Spectrogram is being put into dataframe...")
     for filename in tqdm(df["filename"], desc = "Processing mel ") :
         mel = file_to_vector_mel(filename)
         mels.append(mel)
@@ -157,6 +181,7 @@ def put_chroma_from_dataframe (df) :
     df : pandas.DataFrame, dataframe with "chroma" column
     '''
     chromas = []
+    print("Chroma is being put into dataframe...")
     for filename in tqdm(df["filename"], desc = "Processing chroma ") :
         chroma = file_to_vector_chroma(filename)
         chromas.append(chroma)

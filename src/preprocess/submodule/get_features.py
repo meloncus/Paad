@@ -107,3 +107,7 @@ def get_chroma(x, sr, d=5, win_len_smooth=41, means=False):
         for i in range(chroma.shape[0]):
              labels.append('chroma{}'.format(i+1))
         return chroma, labels
+    
+
+def convert_complex_to_real(value):
+    return complex(value).real

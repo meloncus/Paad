@@ -2,6 +2,9 @@ import os
 import datetime
 import pandas as pd
 import tensorflow as tf
+import numpy as np
+
+from tqdm import tqdm
 
 BASE_DIR_NAME = "data"
 PICKLE_PATH = "working/pkl/"
@@ -13,6 +16,7 @@ sys.path.append(SRC_DIR)
 
 from preprocess.submodule.vector_to_numpy_arr import vector_to_numpy_arr
 from preprocess.submodule.normalize import min_max_normalization
+from preprocess.submodule.get_features import get_features, convert_complex_to_real
 
 
 # base_dir를 초기화하는 데코레이터
@@ -138,3 +142,34 @@ def get_matrixes (df, feat = "mel") :
 
     # return train_data, validate_data, normal_data, abnormal_data
     return train_data, validate_data, y_data, train_data.shape[1:]
+
+
+def get_df_feat(df, n_fft, sr, means=False):
+    ''' Used to extract Features from spectrograms 
+    MFCC, Log mel energy and Chroma (CENS)
+    '''
+    feat_cols = []
+
+    # Initialize the progress bar
+    progress_bar = tqdm(total=len(df), position=0, leave=True)
+    for i, row in df.iterrows():
+        filename = row['filename']
+        feat, labels = get_features(filename, n_fft, sr, frac=10, means=means)
+
+        feat_cols.append(feat)
+        lab_cols = labels
+        # Update the progress bar
+        progress_bar.update(1)
+
+    feat_array = np.vstack(feat_cols)
+    lab_array = lab_cols.flatten()
+
+    feat_df = pd.DataFrame(feat_array, columns=list(lab_array), index=df.index)
+
+    # Convert complex numbers to real values
+    feat_df = feat_df.applymap(convert_complex_to_real)
+
+    # Assign the columns to the original DataFrame
+    df = pd.concat([df, feat_df], axis=1)
+
+    return df

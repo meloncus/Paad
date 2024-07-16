@@ -1,4 +1,4 @@
-from sklearn.ensemble import LocalOutlierFactor as SklearnLocalOutlierFactor
+from sklearn.neighbors import LocalOutlierFactor as SklearnLocalOutlierFactor
 from sklearn.pipeline import Pipeline
 import sys
 import os
@@ -29,3 +29,10 @@ class LocalOutlierFactorPipeline :
             steps.append(("pca", PCA_DEFAULT))
 
         self.pipeline = Pipeline(steps)
+
+    def fit (self, X, y = None, sample_weight = None) :
+        return self.pipeline.fit(X, y, sample_weight)
+
+
+if __name__ == "__main__" :
+    localOutlierFactor = LocalOutlierFactor()
