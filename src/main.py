@@ -66,9 +66,10 @@ def training_all_feat_except_ae (meta_data_path = TMP_DATA_PATH + "df_meta_5050.
         print("Error in loading meta data")
         print(e)
         return None, None
-
+    # 1 일 때
     df_fan, df_fan_means = preprocess_for_all_feat_except_ae(df)
 
+    # 2일 때는 다 스킵
     df_fan = get_train_test_vector_all_feat(df_fan)
     df_fan_means = get_train_test_vector_all_feat(df_fan_means)
 

@@ -18,6 +18,8 @@ from preprocess.submodule.vector_to_numpy_arr import vector_to_numpy_arr
 from preprocess.submodule.normalize import min_max_normalization
 from preprocess.submodule.get_features import get_features, convert_complex_to_real
 
+from utils.submodule.pickle_data import *
+
 
 # base_dir를 초기화하는 데코레이터
 def initialize_base_dir(func) :
@@ -173,3 +175,22 @@ def get_df_feat(df, n_fft, sr, means=False):
     df = pd.concat([df, feat_df], axis=1)
 
     return df
+
+
+def load_pickle_data_for_all_feat () : # feat 만 붙은게 좀 의심스러움 뭐지
+    pickles = search_pickle_data()
+    path_list = decision_filter(pickles)
+    path_list = make_pickle_path(path_list)
+
+    data_list = []
+    if path_list :
+        for tmp_path in path_list :
+            data_list.append(pd.read_pickle(tmp_path))
+
+        return data_list
+
+    return None
+
+
+if __name__ == "__main__" :
+    print(load_pickle_data_for_all_feat())
