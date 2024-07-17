@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from prepare_dataset.prepare_dataset import get_data_paths_and_labels_from_machine as get_data_from_machine
 from preprocess.pd_preprocess import get_specific_data, default_preprocess, preprocess_for_all_feat, put_mel_from_dataframe
-from utils.utils_general import search_pickle_data
+from utils.utils_general import load_pickle_data_for_all_feat
 
 
 from preprocess.submodule.file_to_vector import file_to_vector_mel
@@ -60,18 +60,25 @@ def preprocess_for_all_feat_except_ae (df) :
 
 
 def training_all_feat_except_ae (meta_data_path = TMP_DATA_PATH + "df_meta_5050.pkl") :
-    try : # ignore if meta data is not exist, not yet developed
-        df = pd.read_pickle(meta_data_path)
-    except Exception as e :
-        print("Error in loading meta data")
-        print(e)
-        return None, None
-    # 1 일 때
-    df_fan, df_fan_means = preprocess_for_all_feat_except_ae(df)
+    # caution : meta data 를 불러오지만 load_pickle_data_for_all_feat() funciton 에 의해 불러오지 않음
+    df_list = load_pickle_data_for_all_feat()
+    if df_list is None :
+        raise Exception("Error in loading pickle data")
+    if len(df_list) == 1 :
+        try : # ignore if meta data is not exist, not yet developed
+            df = pd.read_pickle(meta_data_path)
 
-    # 2일 때는 다 스킵
-    df_fan = get_train_test_vector_all_feat(df_fan)
-    df_fan_means = get_train_test_vector_all_feat(df_fan_means)
+            df_fan, df_fan_means = preprocess_for_all_feat_except_ae(df)
+
+            df_fan = get_train_test_vector_all_feat(df_fan)
+            df_fan_means = get_train_test_vector_all_feat(df_fan_means)
+        except Exception as e :
+            print("Error in loading meta data")
+            print(e)
+            return None, None
+    else :
+        df_fan_means = df_list[0]
+        df_fan = df_list[1]
 
     return df_fan, df_fan_means
 
