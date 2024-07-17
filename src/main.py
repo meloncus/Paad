@@ -1,15 +1,22 @@
 import os
 import tensorflow as tf
 import numpy as np
+import pandas as pd
+import sys
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from prepare_dataset.prepare_dataset import get_data_paths_and_labels_from_machine as get_data_from_machine
-from preprocess.pd_preprocess import get_specific_data, default_preprocess, put_mel_from_dataframe
+from preprocess.pd_preprocess import get_specific_data, default_preprocess, preprocess_for_all_feat, put_mel_from_dataframe
+from utils.utils_general import search_pickle_data
+
 
 from preprocess.submodule.file_to_vector import file_to_vector_mel
 from preprocess.submodule.normalize import min_max_normalization
 from models.submodule.autoencoder import AutoEncoder
 # from train_and_eval.submodule.predict import predict_only_autoencoder
 from train_and_eval.submodule.metric import get_mse
+from preprocess.submodule.train_test_split import get_train_test_vector_all_feat
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
@@ -44,8 +51,28 @@ def feat_train_test_preprocess (df, train_ratio = 0.8) : # not work yet
 
     return train_df, test_df
 
-def save_df (df) :
+def save_df_only_ae (df) :
     df.to_pickle(TMP_DATA_PATH + "df_meta_5050.pkl")
+
+
+def preprocess_for_all_feat_except_ae (df) :
+    return preprocess_for_all_feat(df)
+
+
+def training_all_feat_except_ae (meta_data_path = TMP_DATA_PATH + "df_meta_5050.pkl") :
+    try : # ignore if meta data is not exist, not yet developed
+        df = pd.read_pickle(meta_data_path)
+    except Exception as e :
+        print("Error in loading meta data")
+        print(e)
+        return None, None
+
+    df_fan, df_fan_means = preprocess_for_all_feat_except_ae(df)
+
+    df_fan = get_train_test_vector_all_feat(df_fan)
+    df_fan_means = get_train_test_vector_all_feat(df_fan_means)
+
+    return df_fan, df_fan_means
 
 
 def compact_serveing_autoencoder_mel (audio_data_path = DATA_PATH, model_path = MODEL_PATH) :

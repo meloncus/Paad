@@ -28,3 +28,33 @@ def train_test_split (df, train_size = TRAIN_TEST_SPLIT_RATIO, random_state = RA
     df.loc[df.index, "test"] = 1 # use entire dataset for test
 
     return df
+
+
+def get_train_test_vector_all_feat (df) : 
+    train_data = df[df["train"] == 1]
+    test_data = df[df["test"] == 1]
+    y_val = df[(df["test"] == 1)]["label"].tolist()
+
+    mel_cols = get_mel_cols(df)
+    chroma_cols = get_chroma_cols(df)
+
+    return_list = []
+    return_list.extend([train_data[mel_cols], test_data[mel_cols]])
+    return_list.extend([train_data[chroma_cols], test_data[chroma_cols]])
+    return_list.append(y_val)
+
+    return tuple(return_list)
+
+
+def get_mel_cols (df) :
+    cols = df.columns
+    mel_cols = [ col for col in cols if col.startswith("mf") or col.startswith("lm") ]
+
+    return mel_cols
+
+
+def get_chroma_cols (df) :
+    cols = df.columns
+    chroma_cols = [ col for col in cols if col.startswith("chroma") ]
+
+    return chroma_cols

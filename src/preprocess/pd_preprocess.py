@@ -12,6 +12,8 @@ SRC_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 sys.path.append(SRC_DIR)
 
 from preprocess.submodule.file_to_vector import file_to_vector_mel, file_to_vector_chroma
+from preprocess.submodule.get_features import get_df_feat
+from preprocess.submodule.train_test_split import train_test_split
 
 
 data_types = ["fan", "pump", "slider", "valve"]
@@ -186,5 +188,37 @@ def put_chroma_from_dataframe (df) :
         chroma = file_to_vector_chroma(filename)
         chromas.append(chroma)
     df["chroma"] = chromas
+
+    return df
+
+
+def remove_underbar_in_column (df) :
+    '''
+    remove underbar in column name
+
+    input
+    df : pandas.DataFrame, dataframe
+
+    output
+    df : pandas.DataFrame, dataframe with removed underbar in column name
+    '''
+    df.columns = df.columns.str.replace("_", " ").astype("str")
+
+    return df
+
+
+def preprocess_for_all_feat (df) :
+    df_fan = get_df_feat(df, n_fft = 2048, sr = 16000)
+    df_fan_means = get_df_feat(df, n_fft = 2048, sr = 16000, means = True)
+
+    df_fan = preprocess_for_all_with_mean_feat(df_fan)
+    df_fan_means = preprocess_for_all_with_mean_feat(df_fan_means)
+
+    return df_fan, df_fan_means
+
+
+def preprocess_for_all_with_mean_feat (df) :
+    df = remove_underbar_in_column(df)
+    df = train_test_split(df)
 
     return df

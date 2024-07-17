@@ -32,4 +32,6 @@ class IsolationForestPipeline :
 
 
 if __name__ == "__main__" :
-    print(CONTAMINATION)
+    isolationforest = IsolationForest()
+    isolationforest_pipeline = IsolationForestPipeline(isolationforest)
+    print(isolationforest_pipeline)
