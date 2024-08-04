@@ -22,7 +22,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 DATA_PATH = "tmp/audio/"
 TMP_DATA_PATH = "tmp/data/"
-MODEL_PATH = "tmp/autoencoder_weights.h5"
+MODEL_PATH = "tmp/model/autoencoder_weights.h5"
 
 def get_data_paths (machine = "fan") :
     try :
@@ -83,7 +83,7 @@ def training_all_feat_except_ae (meta_data_path = TMP_DATA_PATH + "df_meta_5050.
     return df_fan, df_fan_means
 
 
-def compact_serveing_autoencoder_mel (audio_data_path = DATA_PATH, model_path = MODEL_PATH) :
+def compact_serving_autoencoder_mel (audio_data_path = DATA_PATH, model_path = MODEL_PATH) :
     # load audio mel spectrum from data path
     try :
         data_paths = os.listdir(audio_data_path)
@@ -130,14 +130,15 @@ if __name__ == "__main__" :
     # TODO : merge tests
 
     # test1
-    # loss, reconstructions = compact_serveing_autoencoder_mel()
-    # print(os.listdir(DATA_PATH))
-    # print("Loss : ", loss)
+    loss, reconstructions = compact_serving_autoencoder_mel()
+    print(os.listdir(DATA_PATH))
+    print("Loss : ", loss)
+    print(type(reconstructions))
     # print("Reconstructions : ", reconstructions)
 
     # test2
-    data_paths, labels = get_data_paths()
-    df = df_preprocess_from_paths(data_paths, labels)
-    print(df.head())
-    print(df.shape)
+    # data_paths, labels = get_data_paths()
+    # df = df_preprocess_from_paths(data_paths, labels)
+    # print(df.head())
+    # print(df.shape)
     # save_df(df)

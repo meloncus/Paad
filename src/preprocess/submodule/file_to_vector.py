@@ -39,6 +39,7 @@ def file_to_vector_mel(file_name,
                                                      hop_length=hop_length,
                                                      n_mels=n_mels,
                                                      power=power)
+    # output datatype is np.float32
 
     # 03 convert melspectrogram to log mel energy
     log_mel_spectrogram = 20.0 / power * np.log10(mel_spectrogram + sys.float_info.epsilon)

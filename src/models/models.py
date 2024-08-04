@@ -1,6 +1,6 @@
 from submodule.autoencoder import Autoencoder
 from submodule.isolation_forest import IsolationForest, IsolationForestPipeline
-from submodule.lof import LocalOutlierFactor, LocalOutlierFactorPipeline
+from submodule.local_outlier_factor import LocalOutlierFactor, LocalOutlierFactorPipeline
 
 
 def get_models () :
