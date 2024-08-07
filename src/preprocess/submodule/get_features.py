@@ -15,9 +15,22 @@ sys.path.append(SRC_DIR)
 from utils.submodule.load_audio import load_audio
 
 
-def get_df_feat(df, n_fft, sr, means=False):
+def get_df_feat (df, n_fft, sr, means=False) :
     ''' Used to extract Features from spectrograms 
     MFCC, Log mel energy and Chroma (CENS)
+    '''
+    '''
+    dataset 에서 불러온 데이터를 전처리하기 위한 함수
+    MFCC, Log mel energy, Chroma (CENS)를 추출하는데 사용됨
+
+    input : 
+        df : pandas.DataFrame, dataframe
+        n_fft : int, length of the FFT window
+        sr : int, sample rate
+        means : bool, whether to return the mean of the features
+
+    output :
+        df : pandas.DataFrame, dataframe
     '''
     feat_cols = []
 
@@ -46,7 +59,24 @@ def get_df_feat(df, n_fft, sr, means=False):
     return df
 
 
-def get_features(file, n_fft, sr, frac=10, d=5, win_len_smooth=41, means=False):
+def get_features (file, n_fft, sr, frac=10, d=5, win_len_smooth=41, means=False) :
+    '''
+    audio file에서 mel, chroma feature를 추출하는 함수
+
+    input :
+        file : str, audio file
+        n_fft : int, length of the FFT window
+        sr : int, sample rate
+        frac : int, fraction of the window length
+        d : int, interval to extract columns
+        win_len_smooth : int, window length for smoothing
+        means : bool, whether to return the mean of the features
+
+    output :
+        feat.flatten() : np.array, features
+            feat : np.array, features
+        labels : list, labels
+    '''
     n_fft = n_fft
     x, sr = load_audio(file)
     
@@ -60,7 +90,22 @@ def get_features(file, n_fft, sr, frac=10, d=5, win_len_smooth=41, means=False):
     labels = np.concatenate(([lml], [mfl], [cl]), axis=1)
     return feat.flatten(), labels
 
-def get_lmfe(y, n_fft, sr, means=False):
+def get_lmfe (y, n_fft, sr, means=False) :
+    '''
+    Log mel energy - captures the energy of the signal in different frequency bands
+    Log mel energy - 신호의 에너지를 다른 주파수 대역에서 캡처
+
+    input :
+        y : torch.Tensor, audio signal
+        n_fft : int, length of the FFT window
+        sr : int, sample rate
+        means : bool, whether to return the mean of the features
+
+    output :
+        lmfe.flatten() : np.array, log mel energy
+            lmfe : np.array, log mel energy
+        labels : list, labels
+    '''
     n_fft=n_fft
     y = y[0].numpy()
     n=64
@@ -82,8 +127,23 @@ def get_lmfe(y, n_fft, sr, means=False):
         return lmfe.flatten(), labels
 
 
-def get_mfcc(x, n_fft, sr, frac=10, means=False):
+def get_mfcc (x, n_fft, sr, frac=10, means=False) :
     ''' MFCC - effective in capturing spectral features that are relevant to human perception
+    '''
+    '''
+    MFCC - 인간의 지각에 관련된 스펙트럼 특징을 효과적으로 캡처
+
+    input :
+        x : torch.Tensor, audio signal
+        n_fft : int, length of the FFT window
+        sr : int, sample rate
+        frac : int, fraction of the window length
+        means : bool, whether to return the mean of the features
+
+    output :
+        mfcc.flatten() : np.array, mfcc
+            mfcc : np.array, mfcc
+        labels : list, labels
     '''
     n_fft=sr
 
@@ -119,7 +179,23 @@ def get_mfcc(x, n_fft, sr, frac=10, means=False):
 
 
                      
-def get_chroma(x, sr, d=5, win_len_smooth=41, means=False):
+def get_chroma (x, sr, d=5, win_len_smooth=41, means=False) :
+    '''
+    Chroma - captures the harmonic content of the signal
+    Chroma - 신호의 음향 내용을 캡처, 음악에서 음의 높낮이를 나타냄
+
+    input :
+        x : torch.Tensor, audio signal
+        sr : int, sample rate
+        d : int, interval to extract columns
+        win_len_smooth : int, window length for smoothing
+        means : bool, whether to return the mean of the features
+
+    output :
+        chroma.flatten() : np.array, chroma
+            chroma : np.array, chroma
+        labels : list, labels
+    '''
     hop_length = 512
     chroma = librosa.feature.chroma_cens(y=x[0].numpy(), sr=sr, win_len_smooth=win_len_smooth, hop_length=hop_length)
     chroma = chroma[:, ::d]  # d 간격으로 열 추출
@@ -143,5 +219,14 @@ def get_chroma(x, sr, d=5, win_len_smooth=41, means=False):
         return chroma, labels
     
 
-def convert_complex_to_real(value):
+def convert_complex_to_real (value) :
+    '''
+    복소수를 실수로 변환하는 함수
+
+    input :
+        value : complex, complex number
+
+    output :
+        complex(value).real : float, real number
+    '''
     return complex(value).real

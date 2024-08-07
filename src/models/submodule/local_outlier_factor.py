@@ -8,6 +8,9 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from submodule import NOVELTY, CONTAMINATION, SCALAR, PCA_DEFAULT
 
 class LocalOutlierFactor (SklearnLocalOutlierFactor) :
+    '''
+    sklearn.neighbors.LocalOutlierFactor 를 상속받아, novelty 와 contamination 을 기본값으로 설정한 LocalOutlierFactor 클래스입니다.
+    '''
     def __init__ (self, novelty = NOVELTY, contamination = CONTAMINATION, **kwargs) :
         super().__init__(novelty = novelty, contamination = contamination, **kwargs)
 
@@ -18,6 +21,9 @@ class LocalOutlierFactor (SklearnLocalOutlierFactor) :
         return super().predict(X, **kwargs)
     
 class LocalOutlierFactorPipeline :
+    '''
+    sklearn.pipeline.Pipeline 을 상속받아, LocalOutlierFactor 를 적용한 pipeline 을 정의합니다.
+    '''
     def __init__ (self, local_outlier_factor : LocalOutlierFactor, is_pca = False, **kwargs) :
         self.local_outlier_factor = local_outlier_factor
         steps = [

@@ -16,6 +16,19 @@ def calculate_stats (predictions, labels, machine, feat_label, model = "AE") :
     output
     df : pandas.DataFrame, calculated statistics
     '''
+    '''
+    predictions, labels로부터 auc, precision, recall, f1 for abnormal을 계산하는 함수
+
+    input :
+        predictions : numpy.array, predicted labels
+        labels : numpy.array, true labels
+        machine : string, machine name
+        feat_label : string, feature label ?
+        model : string, model name
+
+    output :
+        df : pandas.DataFrame, calculated metrics
+    '''
     auc_score = metrics.roc_auc_score(labels, predictions)
     precision = metrics.precision_score(labels, predictions)
     recall = metrics.recall_score(labels, predictions)
@@ -35,7 +48,7 @@ def calculate_stats (predictions, labels, machine, feat_label, model = "AE") :
 
     return df
 
-def get_mse(source, target):
+def get_mse (source, target) :
     '''
     get mean square error between source and target
 
@@ -45,6 +58,16 @@ def get_mse(source, target):
 
     output
     mse : numpy.array, mean square error between source and target
+    '''
+    '''
+    source와 target 사이의 mean square error를 계산하는 함수
+
+    input :
+        source : numpy.array, source image
+        target : numpy.array, target image
+
+    output :
+        mse : numpy.array, source와 target 사이의 mean square error
     '''
     # Returns the mean square error for each image in the array
     # TODO : I think this function is noly fit for autoencoder... recommand asap

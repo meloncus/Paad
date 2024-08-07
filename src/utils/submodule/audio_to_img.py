@@ -8,6 +8,17 @@ def plot_waveform (waveform, duration = DURATION, sampling_rate = SAMPLING_RATE)
     '''
     mono data only plot
     '''
+    '''
+    mono waveform plot
+
+    input :
+        waveform : numpy.array, mono waveform
+        duration : float, duration of audio
+        sampling_rate : int, sampling rate of audio
+
+    output :
+        None
+    '''
     time = np.linspace(0., duration, sampling_rate * duration)
     waveform = np.squeeze(waveform)
     

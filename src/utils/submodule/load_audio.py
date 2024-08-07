@@ -13,7 +13,7 @@ import torch
 import librosa
 
 
-def load_audio(filename, normalize=True, channel=0) :
+def load_audio (filename, normalize=True, channel=0) :
     '''
     load audio file and return waveform and sample rate
 
@@ -26,6 +26,18 @@ def load_audio(filename, normalize=True, channel=0) :
     output
     waveform : torch.tensor
     sample_rate : int
+    '''
+    '''
+    오디오 파일을 로드하고 waveform과 sample rate을 반환하는 함수
+
+    input :
+        filename : str, target .wav file
+        normalize : bool (default : True)
+        channel : int (default : 0)
+
+    output :
+        waveform : torch.tensor
+        sample_rate : int
     '''
 
     waveform, sample_rate = torchaudio.load(filename, normalize=normalize)

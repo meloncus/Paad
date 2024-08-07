@@ -68,7 +68,7 @@ data_class = [ "normal", "abnormal", "unknown"]  # 분류할 데이터의 종류
 
 
 @initialize_base_dir
-def get_data_paths_and_labels_from_machine(machine, base_dir) :
+def get_data_paths_and_labels_from_machine (machine, base_dir) :
     '''
     data_path를 조합 -> dcase 혹은 mimii 데이터셋의 디렉토리 경로와 label을 추출
 
@@ -117,7 +117,7 @@ def get_data_paths_and_labels_from_machine(machine, base_dir) :
     return data_dict, label_dict
 
 
-def get_from_dcase(machine, year, base_dir) :
+def get_from_dcase (machine, year, base_dir) :
     '''
     DCASE 데이터셋의 디렉토리 경로와 label을 추출
     dev, eval, add 데이터셋으로 중분류
@@ -164,7 +164,7 @@ def get_from_dcase(machine, year, base_dir) :
     return data_dict, label_dict
         
 
-def get_from_mimii(machine, decibel, base_dir) :
+def get_from_mimii (machine, decibel, base_dir) :
     '''
     MIMII 데이터셋의 디렉토리 경로와 label을 추출
 

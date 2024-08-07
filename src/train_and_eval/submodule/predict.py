@@ -7,7 +7,7 @@ sys.path.append(SRC_DIR)
 
 from train_and_eval.submodule.metric import get_mse
 
-def predict_only_autoencoder(model, data, threshold = 0.5) :
+def predict_only_autoencoder (model, data, threshold = 0.5) :
     '''
     predict whether data is normal or not using autoencoder
 
@@ -18,6 +18,17 @@ def predict_only_autoencoder(model, data, threshold = 0.5) :
 
     output
     predictions : numpy.array, predicted labels
+    '''
+    '''
+    autoencoder를 이용하여 데이터가 정상인지 비정상인지 예측하는 함수
+
+    input :
+        model : tensorflow.keras.Model, autoencoder 모델
+        data : pandas.DataFrame, 예측할 데이터
+        threshold : float, 이상 감지 임계값
+
+    output :
+        predictions : numpy.array, 예측된 라벨
     '''
     # this part is getting loss from autoencoder, need to develop for more expandable
     reconstruction = model.predict(data) 

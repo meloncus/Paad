@@ -27,6 +27,20 @@ def file_to_vector_mel(file_name,
         vector array
         * dataset.shape = (dataset_size, fearture_vector_length)
     """
+    '''
+    file_name 으로 log mel spectrogram을 만들어주는 함수
+
+    input : 
+        file_name : str, target .wav
+        n_mels : int, number of mel bins
+        frames : int, number of frames to concatenate
+        n_fft : int, length of the FFT window
+        hop_length : int, number of samples between successive frames
+        power : float, power to apply to the mel spectrogram
+
+    output :
+        log_mel_spectrogram : np.array, log mel spectrogram
+    '''
     # 01 calculate the number of dimensions
     dims = n_mels * frames
 
@@ -72,6 +86,20 @@ def file_to_vector_chroma(file_name,
         vector array
         * dataset.shape = (dataset_size, fearture_vector_length)
     """
+    '''
+    file_name 으로 chroma cens를 만들어주는 함수
+
+    input : 
+        file_name : str, target .wav
+        n_chroma : int, number of chroma bins
+        d : int, interval for column extraction
+        win_len_smooth : int, length of the smoothing window
+        frames : int, number of frames to concatenate
+        hop_length : int, number of samples between successive frames
+
+    output :
+        cens_gram : np.array, chroma cens
+    '''
     # 01 calculate the number of dimensions
     dims = n_chroma * frames
 

@@ -1,7 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras import layers, Model # type: ignore
 
-class AutoEncoder (Model):
+class AutoEncoder (Model) :
+    '''
+    tensorflow.keras.Model을 상속받아 AutoEncoder를 정의합니다.
+    '''
     def __init__(self, shape):
         super(AutoEncoder, self).__init__()
         self.shape = shape

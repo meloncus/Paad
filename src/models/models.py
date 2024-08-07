@@ -7,6 +7,16 @@ def get_models () :
     '''
     get statistic models for anomaly detection
     '''
+    '''
+    autoencoder 를 제외한 isolation forest, local outlier factor 를 사용한 모델들과 그 모델들에 PCA 를 적용한 모델들을 반환합니다.
+    총 4개의 모델을 반환합니다.
+
+    input : 
+        None
+
+    output :
+        models : dict (key : str {model_name}, value : object, {model_pipeline})
+    '''
     isolation_forest = IsolationForest()
     isolation_forest_pipeline = IsolationForestPipeline(isolation_forest)
     isolation_forest_with_pca_pipeline = IsolationForestPipeline(isolation_forest, is_pca = True)

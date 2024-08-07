@@ -8,6 +8,9 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from submodule import CONTAMINATION, SCALAR, PCA_DEFAULT
 
 class IsolationForest (SklearnIsolationForest) :
+    '''
+    sklearn.ensemble.IsolationForest 를 상속받아, contamination 을 기본값으로 설정한 IsolationForest 클래스입니다.
+    '''
     def __init__ (self, contamination = CONTAMINATION, **kwargs) :
         super().__init__(contamination = contamination, **kwargs)
 
@@ -18,6 +21,9 @@ class IsolationForest (SklearnIsolationForest) :
         return super().predict(X, **kwargs)
 
 class IsolationForestPipeline :
+    '''
+    sklearn.pipeline.Pipeline 을 상속받아, IsolationForest 를 적용한 pipeline 을 정의합니다.
+    '''
     def __init__ (self, isolation_forest : IsolationForest, is_pca = False, **kwargs) :
         self.isolation_forest = isolation_forest
         steps = [

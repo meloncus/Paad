@@ -39,6 +39,17 @@ def get_specific_data (data_dict) :
     output
     data : dictionary, specific data from data_dict
     '''
+    '''
+    MIMII, DCASE 일 경우 특정 데이터를 가져오기 위한 함수, default 값이 global 변수로 설정되어 있음
+    MIMII[case][db] 혹은 DCASE[case][year][dev_eval_additional][train_or_test] 데이터를 가져옴
+
+    input :
+        data_dict : dictionary, get_data_paths_and_labels_from_machine에서 나온 data_dict
+
+    output :
+        data : dictionary, data_dict에서 특정 데이터를 가져온 것
+        MIMII, DCASE가 아닌 경우 None을 반환
+    '''
 
     if specific_case == "MIMII" :
         data = data_dict[specific_case][specific_db]
@@ -65,6 +76,17 @@ def default_preprocess (data_dict, label_dict) :
     df : pandas.DataFrame, dataframe from data_dict and label_dict, { "filename" : flatten_data, "label" : label_data, "type" : type of data(such as "fan")}
         if data is from MIMII, add "model" columns { "model" : id of data(such as "1")}
     '''
+    '''
+    data_dict와 label_dict를 받아서 기본적인 전처리를 하고 dataframe으로 만드는 함수 (데이터를 직접적으로 다루지는 않음)
+
+    input :
+        data_dict : dictionary, get_specific_data에서 나온 특정 데이터
+        label_dict : dictionary, get_specific_data에서 나온 label_dict, { key : path, value : label(1 or -1) }
+
+    output :
+        df : pandas.DataFrame, data_dict와 label_dict로부터 만들어진 dataframe, { "filename" : flatten_data, "label" : label_data, "type" : type of data(such as "fan")}
+            만약 데이터가 MIMII일 경우 "model" column을 추가 { "model" : id of data(such as "1")}
+    '''
 
     flatten_data = get_flatten_data(data_dict)
 
@@ -86,6 +108,15 @@ def get_flatten_data (data_dict) :
     output
     data : list, flatten data from data_dict
     '''
+    '''
+    path data 가 dictionary 형태로 들어올 경우 flatten data를 반환하는 함수. list 형태로 반환
+
+    input :
+        data_dict : dictionary, get_specific_data에서 나온 특정 데이터
+
+    output :
+        data : list, data_dict를 flatten한 것
+    '''
 
     data = list()
 
@@ -106,6 +137,16 @@ def get_dropped_data_through_specific_id_from_flatten_data (flatten_data_list, s
     output
     data : list, list of path that contains specific_id
     '''
+    '''
+    flatten_data_list에서 specific_id를 포함하는 path를 반환하는 함수
+
+    input :
+        flatten_data_list : list, path의 list
+        specific_id : int, 특정 id
+
+    output :
+        data : list, specific_id를 포함하는 path의 list
+    '''
     return [each_path for each_path in flatten_data_list if f"id_{specific_id:02d}" in each_path]
 
 
@@ -119,6 +160,16 @@ def get_label_from_flatten_specifics (flatten_data_list, specific_label_dict) :
 
     output 
     label_data : list, list of label(1 or -1)
+    '''
+    '''
+    label dictionary 에서 flatten_data_list에 해당하는 label을 가져오는 함수
+
+    input :
+        flatten_data_list : list, path의 list
+        specific_label_dict : dictionary, get_specific_data에서 나온 label_dict, { key : path, value : label(1 or -1) }
+
+    output :
+        label_data : list, label(1 or -1)의 list
     '''
 
     return [ specific_label_dict[raw_path] for raw_path in flatten_data_list ]
@@ -135,6 +186,17 @@ def get_dataframe_from_flatten_data_and_label (flatten_data, label_data) :
     output
     df : pandas.DataFrame, dataframe from flatten_data and label_data, { "filename" : flatten_data, "label" : label_data, "type" : type of data(such as "fan")}
         if data is from MIMII, add "model" columns { "model" : id of data(such as "1")}
+    '''
+    '''
+    flatten_data와 label_data로부터 dataframe을 만드는 함수, type이 추가된다. 
+    { "filename" : flatten_data, "label" : label_data, "type" : type of data(such as "fan")}
+
+    input :
+        flatten_data : list, path의 list
+        label_data : list, label(1 or -1)의 list
+
+    output :
+        df : pandas.DataFrame, flatten_data와 label_data로부터 만들어진 dataframe
     '''
     df = pd.DataFrame({"filename" : flatten_data, "label" : label_data})
 
@@ -162,6 +224,15 @@ def put_mel_from_dataframe (df) :
     output
     df : pandas.DataFrame, dataframe with "mel" column
     '''
+    '''
+    mel spectrogram으로 전처리 된 데이터를 dataframe에 넣는 함수
+
+    input :
+        df : pandas.DataFrame, get_dataframe_from_flatten_data_and_label에서 나온 dataframe
+
+    output :
+        df : pandas.DataFrame, "mel" column이 추가된 dataframe
+    '''
     mels = []
     print("Mel Spectrogram is being put into dataframe...")
     for filename in tqdm(df["filename"], desc = "Processing mel ") :
@@ -181,6 +252,15 @@ def put_chroma_from_dataframe (df) :
 
     output
     df : pandas.DataFrame, dataframe with "chroma" column
+    '''
+    '''
+    chroma를 dataframe에 넣는 함수
+
+    input :
+        df : pandas.DataFrame, get_dataframe_from_flatten_data_and_label에서 나온 dataframe
+
+    output :
+        df : pandas.DataFrame, "chroma" column이 추가된 dataframe
     '''
     chromas = []
     print("Chroma is being put into dataframe...")
@@ -202,12 +282,30 @@ def remove_underbar_in_column (df) :
     output
     df : pandas.DataFrame, dataframe with removed underbar in column name
     '''
+    '''
+    column name에서 underbar를 제거하는 함수
+
+    input :
+        df : pandas.DataFrame, dataframe
+
+    output :
+        df : pandas.DataFrame, column name에서 underbar가 제거된 dataframe
+    '''
     df.columns = df.columns.str.replace("_", " ").astype("str")
 
     return df
 
 
 def preprocess_for_all_feat (df) :
+    '''
+    전체 모델을 위한 전처리 함수
+
+    input :
+        df : pandas.DataFrame, dataframe
+
+    output :
+        df : pandas.DataFrame, 전처리된 dataframe
+    '''
     df_fan = get_df_feat(df, n_fft = 2048, sr = 16000)
     df_fan_means = get_df_feat(df, n_fft = 2048, sr = 16000, means = True)
 
@@ -218,6 +316,15 @@ def preprocess_for_all_feat (df) :
 
 
 def preprocess_for_all_with_mean_feat (df) :
+    '''
+    전체 모델에서 underbar를 제거하고 train test split을 하는 함수
+
+    input :
+        df : pandas.DataFrame, dataframe, preprocess_for_all_feat에서 나온 dataframe
+
+    output :
+        df : pandas.DataFrame, 전처리된 dataframe
+    '''
     df = remove_underbar_in_column(df)
     df = train_test_split(df)
 

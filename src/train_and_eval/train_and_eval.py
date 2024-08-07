@@ -37,6 +37,22 @@ def train_and_eval_for_autoencoder(
     autoencoder : tensorflow.keras.Model, trained autoencoder model
     df : pandas.DataFrame, calculated statistics
     '''
+    '''
+    Autoencoder를 학습하고 평가하는 함수
+
+    input : 
+        train_set : numpy.array, training set
+        val_set : numpy.array, validation set
+        y_val : numpy.array, validation labels
+        input_dim : int, input dimension
+        device : string, device name
+        feat : string, feature label
+        epochs : int, number of epochs
+
+    output :
+        autoencoder : tensorflow.keras.Model, trained autoencoder model
+        df : pandas.DataFrame, calculated metrics
+    '''
     # initialize autoencoder model
     autoencoder = AutoEncoder(input_dim)
     autoencoder.compile(optimizer = 'adam', loss = 'mean_squared_error')

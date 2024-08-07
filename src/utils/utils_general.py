@@ -22,8 +22,17 @@ from utils.submodule.pickle_data import *
 
 
 # base_dir를 초기화하는 데코레이터
-def initialize_base_dir(func) :
-    def wrapper(*args, **kwargs) :
+def initialize_base_dir (func) :
+    '''
+    기본 path 를 data/로 초기화하는 데코레이터
+
+    input :
+        func : function, base_dir을 초기화할 함수
+
+    output :
+        wrapper : function, base_dir이 초기화된 함수
+    '''
+    def wrapper (*args, **kwargs) :
         if 'base_dir' not in kwargs or kwargs['base_dir'] is None :
             # base_dir을 새로 계산하거나 업데이트하는 로직
             base_dir = get_base_dir()
@@ -33,7 +42,18 @@ def initialize_base_dir(func) :
 
 
 # base_dir를 초기화하는 함수
-def get_base_dir() :
+def get_base_dir () :
+    '''
+    base_dir을 초기화하는 함수, initialize_base_dir 데코레이터에서 사용
+
+    input :
+        None
+
+    output :
+        base_dir : string, base_dir
+        or
+        None : None, base_dir을 찾을 수 없는 경우
+    '''
     current_dir = os.path.abspath(__file__)
     while True :
         parent_dir = os.path.dirname(current_dir)
@@ -47,6 +67,15 @@ def get_base_dir() :
 
 
 def get_dir_path_default_dataframe (df) : 
+    '''
+    file path로부터 디렉토리 정보를 추출하는 함수
+
+    input : 
+        df : pandas.DataFrame, dataframe
+
+    output :
+        dir_info : string, 디렉토리 정보
+    '''
     path_split = df.iloc[0]["filename"].split("/")
     data_type = df.iloc[0]["type"]
     dir_info = data_type
@@ -71,10 +100,28 @@ def get_dir_path_default_dataframe (df) :
 
 
 def get_abs_dir_path (dir_path) :
+    '''
+    절대 경로를 반환하는 함수
+
+    input :
+        dir_path : string, 디렉토리 경로
+
+    output :
+        abs_dir_path : string, 절대 경로
+    '''
     return os.path.join(get_base_dir(), PICKLE_PATH, dir_path)
 
 
 def make_dir_from_abs_path (dir_path) :
+    '''
+    절대 경로로부터 디렉토리를 만드는 함수
+
+    input :
+        dir_path : string, 디렉토리 경로
+
+    output :
+        None
+    '''
     print("Be careful with the path, This can make all directories in the path.")
     print("Path : ", dir_path)
     print("Are you sure you want to make directories in the path? (y/n)")
@@ -92,6 +139,19 @@ def make_dir_from_abs_path (dir_path) :
 
 
 def save_dataframe (df, abs_path, filename) :
+    '''
+    pickle 형태로 dataframe을 저장하는 함수
+
+    input :
+        df : pandas.DataFrame, dataframe
+        abs_path : string, 저장할 디렉토리 경로
+        filename : string, 저장할 파일 이름
+
+    output :
+        data_path : string, 저장된 파일 경로
+        or
+        None : None, 저장에 실패한 경우
+    '''
     if os.path.exists(abs_path) :
         current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         data_path = os.path.join(abs_path, current_time + '_' + filename + ".pkl")
@@ -120,6 +180,19 @@ def get_matrixes (df, feat = "mel") :
     y_data : numpy.array, labels
     inputDim : tuple, input dimension
     '''
+    '''
+    train test split 전처리된 dataframe 에서 min max normalization 을 통해 데이터를 전처리하고, tensorflow.tensor 로 변환해서 각각 추출하는 함수
+
+    input :
+        df : pandas.DataFrame, 전처리된 dataframe
+        feat : string, feature name
+
+    output :
+        train_data : numpy.array, training data
+        validate_data : numpy.array, validation data
+        y_data : numpy.array, labels
+        inputDim : tuple, input dimension
+    '''
     # vector_to_numpy_arr : list of vector to numpy array
     train_data = vector_to_numpy_arr(df[(df["train"] == 1)][feat].tolist())
     validate_data = vector_to_numpy_arr(df[(df["test"] == 1)][feat].tolist())
@@ -146,9 +219,21 @@ def get_matrixes (df, feat = "mel") :
     return train_data, validate_data, y_data, train_data.shape[1:]
 
 
-def get_df_feat(df, n_fft, sr, means=False):
+def get_df_feat (df, n_fft, sr, means=False) :
     ''' Used to extract Features from spectrograms 
     MFCC, Log mel energy and Chroma (CENS)
+    '''
+    '''
+    dataframe 에서 feature 를 추출하는 함수
+
+    input :
+        df : pandas.DataFrame, dataframe
+        n_fft : int, fft 변환 시 사용할 n 값
+        sr : int, sampling rate
+        means : bool, means 사용 여부
+
+    output :
+        df : pandas.DataFrame, feature가 추가된 dataframe
     '''
     feat_cols = []
 
@@ -178,6 +263,17 @@ def get_df_feat(df, n_fft, sr, means=False):
 
 
 def load_pickle_data_for_all_feat () : # feat 만 붙은게 좀 의심스러움 뭐지
+    '''
+    모든 전처리된 pickle data를 불러오는 함수, decision_filter 함수를 통해 train_test, feat, 일반 pkl 중 하나를 찾아서 불러옴
+
+    input :
+        None
+
+    output :
+        data_list : list, 불러온 pickle data list
+        or
+        None : None, 불러온 pickle data가 없는 경우
+    '''
     pickles = search_pickle_data()
     path_list = decision_filter(pickles)
     path_list = make_pickle_path(path_list)

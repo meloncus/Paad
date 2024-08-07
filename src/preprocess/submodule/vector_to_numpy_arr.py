@@ -13,6 +13,17 @@ def vector_to_numpy_arr (vector_arr) :
     dataset : numpy.array
         numpy array of vectors
     '''
+    '''
+    vector list를 numpy array로 변환하는 함수
+
+    input :
+        vector_arr : list of numpy.array
+            vector들의 list
+
+    output :
+        dataset : numpy.array
+            vector들의 numpy array
+    '''
     len_list = len(vector_arr)
 
     for idx in tqdm(range(len_list)) :
